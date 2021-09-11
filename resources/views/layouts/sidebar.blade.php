@@ -36,7 +36,7 @@
     <div class="container-fluid p-0 d-md-flex">
         <div class="sidebar col-12 col-md-2 min-vh-100 p-0">
             <a href="{{ route('home') }}">
-                <img src="{{ asset('storage/images/logo3.png') }}" id="logo" class="img-fluid" alt="">
+                <img src="{{ asset('/storage/images/logo3.png') }}" id="logo" class="img-fluid" alt="">
             </a>
             @auth
             <ul class="list-unstyled px-2">

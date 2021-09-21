@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Admin;
 use App\Models\User;
 use App\Models\Log;
+use Spatie\Permission\Models\Role;
 
 class AdminController extends Controller
 {
@@ -18,6 +19,15 @@ class AdminController extends Controller
 
     public function user_create() {
         return view('admin.user_create');
+    }
+
+    public function role_create() {
+        return view('admin.role_create');
+    }
+
+    public function role_create_insert(Request $request) {
+        $role = Role::create(['name' => request('roleName')]);
+        return view('admin.role_create')->with('success', 'Successfully created role ' . request('name'));
     }
 
     public function user_create_insert(Request $request) {
@@ -59,16 +69,16 @@ class AdminController extends Controller
     public function user_edit_insert(Request $request, $id) {
         $user = User::where('id', '=', $id)->first();
         
-        if(request('name') != 0) {
-            $user->name = request('name');
+        if($request->name) {
+            $user->name = $request->name;
             $user->save();
-        } else if(request('password') != 0) {
+        } else if($request->password) {
             $user->password = Hash::make(request('password'));
             $user->save();
-        } else if(request('role') != 0) {
-            $user->assignRole(request('role'));
-            $user->save();
         }
+        
+        $user->assignRole(request('role'));
+        $user->save();
         return redirect('/admin/user/manage/' . $id)->with('success', 'Successfully updated user.');
     }
 

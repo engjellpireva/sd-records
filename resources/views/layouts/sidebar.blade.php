@@ -31,6 +31,8 @@
         }
     </style>
 
+    @livewireStyles
+
 </head>
 <body>
     <div class="container-fluid p-0 d-md-flex">
@@ -42,10 +44,12 @@
             <ul class="list-unstyled px-2">
                 <li class="list-item border-bottom py-2 border-secondary">
                     <p class="text-white fw-bold fs-6 my-auto">
-                        @role('Supervisor')
-                        Supervisor {{ Auth::user()->name }}
+                        @role('Sheriff')
+                        Sheriff {{ Auth::user()->name }}
                         @elserole('Administrator')
                         Administrator {{ Auth::user()->name }}
+                        @elserole('Supervisor')
+                        Supervisor {{ Auth::user()->name }}
                         @else
                         Deputy Sheriff {{ Auth::user()->name }}
                         @endrole
@@ -54,6 +58,35 @@
                         @hasrole('Supervisor|Administrator')
                         <a href="/admin" class="text-decoration-none {{ request()->is('admin*') ? 'text-warning' : 'text-secondary' }}">Administration Panel</a>
                         @endhasrole
+                        <div class="btn-group dropend">
+                            <a href="#" role="button" id="notificationsDropDown" data-bs-toggle="dropdown" aria-expanded="false" class="text-decoration-none text-secondary">
+                            Notifications 
+                                <span class="badge px-2 bg-secondary">
+                                    @if($notifications != "0")
+                                    {{ $notifications->count() }}
+                                    @else
+                                    0
+                                    @endif
+                                </span>
+                            </a>
+
+                            <ul style="height: 50vh;" class="dropdown-menu p-0 pb-3 rounded-0 overflow-auto list-unstyled">
+                                <li>
+                                    <p class="bg-dark p-3 text-white position-sticky">Notifications</p>
+                                    @if($notifications->count() === 0)
+                                    <p class="p-3">You have no notifications.</p>
+                                    @else
+                                    @foreach($notifications as $notification)
+                                    <a href="{{ $notification->link }}" class="dropdown-item py-2 ps-1"><strong>{{ $notification->handler }}</strong> {{ $notification->action }} 
+                                        <figcaption class="blockquote-footer mt-1">
+                                            {{ \Carbon\Carbon::parse($notification->created_at)->diffForHumans() }}
+                                        </figcaption>    
+                                    </a>
+                                    @endforeach
+                                    @endif
+                                </li>
+                            </ul>
+                        </div>
                         <a href="/warrants/mine" class="text-decoration-none {{ request()->is('warrants/mine') ? 'text-warning' : 'text-secondary' }}">My Warrants</a>
                         <a href="{{ route('logout') }}" class="text-decoration-none text-secondary" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"}>Logout</a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -90,14 +123,14 @@
                     </div>
                 </li>
                 <li class="list-item border-bottom py-2 border-secondary">
-                    <a data-bs-toggle="collapse" class="d-flex justify-content-between text-decoration-none text-white fw-bold fs-6" href="#individuals" role="button" aria-expanded="false" aria-controls="individuals">
+                    <a data-bs-toggle="collapse" class="d-flex justify-content-between text-decoration-none text-white {{ request()->is('individuals/*') ? 'text-warning' : 'text-white' }} fw-bold fs-6" href="#individuals" role="button" aria-expanded="false" aria-controls="individuals">
                         Individuals
                         <i class="fas my-auto fa-caret-down"></i>
                     </a>
                     <div class="collapse" id="individuals">
                         <span class="d-flex flex-column">
-                            <a href="#" class="text-decoration-none text-secondary">Create Individual</a>
-                            <a href="#" class="text-decoration-none text-secondary">View Individuals</a>
+                            <a href="/individuals/create" class="text-decoration-none {{'individuals/create' === request()->path() ? 'text-warning' : 'text-secondary' }}">Create Individual</a>
+                            <a href="/individuals/view" class="text-decoration-none {{ 'individuals/view' === request()->path() ? 'text-warning' : 'text-secondary' }}">View Individuals</a>
                         </span>
                     </div>
                 </li>
@@ -121,5 +154,6 @@
         @yield('content')
     </div>
 
+    @livewireScripts
 </body>
 </html>

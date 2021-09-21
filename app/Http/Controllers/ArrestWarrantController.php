@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Log;
+use App\Models\Notification;
 
 class ArrestWarrantController extends Controller
 {
@@ -67,6 +68,19 @@ class ArrestWarrantController extends Controller
         $arrest_warrant->active = 0;
         $arrest_warrant->save();
 
+        $publisher = DB::table('arrest_warrants')->select('publisher_id')->where('id', '=', $id)->first();
+        $publisher_name = DB::table('arrest_warrants')->select('publisher')->where('id', '=', $id)->first();
+
+        $notification = new Notification();
+        $notification->publisher_id = $publisher->publisher_id;
+        $notification->publisher = $publisher_name->publisher;
+        $notification->handler_id = Auth::id();
+        $notification->handler = Auth::user()->name;
+        $notification->action = "closed your arrest warrant (#$id).";
+        $notification->link = "/warrants/arrest/details/" . $id;
+        $notification->warrant_id = $id;
+        $notification->save();
+        
         $log = new Log();
         $log->user_id = Auth::id();
         $log->username = Auth::user()->name;
@@ -79,6 +93,19 @@ class ArrestWarrantController extends Controller
         $arrest_warrant = ArrestWarrant::findOrFail($id);
         $arrest_warrant->active = 2;
         $arrest_warrant->save();
+
+        $publisher = DB::table('arrest_warrants')->select('publisher_id')->where('id', '=', $id)->first();
+        $publisher_name = DB::table('arrest_warrants')->select('publisher')->where('id', '=', $id)->first();
+
+        $notification = new Notification();
+        $notification->publisher_id = $publisher->publisher_id;
+        $notification->publisher = $publisher_name->publisher;
+        $notification->handler_id = Auth::id();
+        $notification->handler = Auth::user()->name;
+        $notification->action = "approved your arrest warrant (#$id).";
+        $notification->link = "/warrants/arrest/details/" . $id;
+        $notification->warrant_id = $id;
+        $notification->save();
 
         $log = new Log();
         $log->user_id = Auth::id();

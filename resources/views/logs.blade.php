@@ -10,7 +10,7 @@
                 <div class="card-body rounded-0">
                 <form method="GET" action="/logs">
                     <div class="input-group mb-3">
-                        <input type="text" name="keyword" id="keyword" class="form-control rounded-0" placeholder="Search by username or action" value="{{ request()->query('keyword') }}" required autocomplete="keyword">
+                        <input wire:model="search" type="text" name="keyword" id="keyword" class="form-control rounded-0" placeholder="Search by username or action" value="{{ request()->query('keyword') }}" required autocomplete="keyword">
                         <button type="submit" class="input-group-text btn-success rounded-0"><i class="bi bi-search"></i>Search</button>
                     </div>
                 </form>

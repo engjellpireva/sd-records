@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Log;
+use App\Models\Notification;
 
 class SearchWarrantController extends Controller
 {
@@ -59,6 +60,19 @@ class SearchWarrantController extends Controller
         $search_warrants->active = 0;
         $search_warrants->save();
 
+        $publisher = DB::table('search_warrants')->select('publisher_id')->where('id', '=', $id)->first();
+        $publisher_name = DB::table('search_warrants')->select('publisher')->where('id', '=', $id)->first();
+
+        $notification = new Notification();
+        $notification->publisher_id = $publisher->publisher_id;
+        $notification->publisher = $publisher_name->publisher;
+        $notification->handler_id = Auth::id();
+        $notification->handler = Auth::user()->name;
+        $notification->action = "closed your search warrant (#$id).";
+        $notification->link = "/warrants/search/details/" . $id;
+        $notification->warrant_id = $id;
+        $notification->save();
+
         $log = new Log();
         $log->user_id = Auth::id();
         $log->username = Auth::user()->name;
@@ -72,6 +86,19 @@ class SearchWarrantController extends Controller
         $search_warrants = SearchWarrant::findOrFail($id);
         $search_warrants->active = 2;
         $search_warrants->save();
+
+        $publisher = DB::table('search_warrants')->select('publisher_id')->where('id', '=', $id)->first();
+        $publisher_name = DB::table('search_warrants')->select('publisher')->where('id', '=', $id)->first();
+
+        $notification = new Notification();
+        $notification->publisher_id = $publisher->publisher_id;
+        $notification->publisher = $publisher_name->publisher;
+        $notification->handler_id = Auth::id();
+        $notification->handler = Auth::user()->name;
+        $notification->action = "approved your search warrant (#$id).";
+        $notification->link = "/warrants/search/details/" . $id;
+        $notification->warrant_id = $id;
+        $notification->save();
 
         $log = new Log();
         $log->user_id = Auth::id();

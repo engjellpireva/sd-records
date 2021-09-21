@@ -7,6 +7,7 @@
             <div class="card rounded-0">
                 <div class="card-header rounded-0 bg-dark d-flex justify-content-between my-auto text-white">
                     <p class="my-auto">Arrest Warrant Details - {{ $warrant->id }}</p>
+                    @hasrole('Supervisor|Administrator')
                     @if($warrant->active != 0 && $warrant->active != 2)
                     <div class="d-flex">
                         <form method="POST" action="/warrants/arrest/details/close/{{ $warrant->id }}">
@@ -29,6 +30,7 @@
                         <button type="submit" class="btn btn-success rounded-0 my-auto">Reapprove</button>
                     </form>
                     @endif
+                    @endhasrole
                 </div>
                 
                 <div class="card-body">
@@ -74,7 +76,7 @@
                             <textarea name="comment" placeholder="You can't add a comment on this warrant." class="col-12 rounded-0 border-0" id="comment" cols="30" rows="7" disabled></textarea>
                             <input type="submit" class="mt-2 col-12 btn btn-dark rounded-0" disabled value="Submit">
                         @else
-                            <textarea textarea name="comment" class="col-12 border rounded-0" id="comment" cols="30" rows="7"></textarea>
+                            <textarea textarea name="comment" class="col-12 border rounded-0" id="comment" cols="30" rows="7" required></textarea>
                             <input type="submit" class="mt-2 col-12 btn btn-dark rounded-0" value="Submit">
                         @endif
                     </form>

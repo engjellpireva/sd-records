@@ -39,10 +39,7 @@
                         <div class="form-group my-auto">
                             <label for="role" class="col-md-4 col-form-label">Change Role:</label>
                             <div class="col-md-12">
-                                <select name="role" id="role" class="form-control rounded-0">
-                                    <option selected>Supervisor</option>
-                                    <option value="Administrator">Administrator</option>
-                                </select>
+                                <input type="text" id="role" name="role" placeholder="Supervisor, Gang Deputy" class="form-control rounded-0">
                             </div>
                         </div>
 

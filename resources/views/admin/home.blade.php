@@ -14,6 +14,14 @@
                     </h4>
                     <a href="/admin/user/create" class="btn btn-dark rounded-0 mt-2">Create a new user</a>
                     <a href="/admin/user/manage" class="btn btn-dark rounded-0 mt-2">Manage user</a>
+
+                    @hasrole('Sheriff')
+                    <h4 class="my-auto border-bottom py-2">
+                        <i class="fas fa-user-shield mt-3"></i>
+                        Role Management
+                    </h4>
+                    <a href="/admin/role/create" class="btn btn-dark rounded-0 mt-2">Create a new Role</a>
+                    @endhasrole
                 </div>
             </div>
         </div>
